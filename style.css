@@ -250,7 +250,7 @@ img { max-width: 100%; height: auto; display: block; }
 .hero-inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 32px 60px;
+  padding: 0 32px 60px 16px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
