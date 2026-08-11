@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isOpen = mobileMenu.classList.toggle('open');
     hamburger.classList.toggle('open', isOpen);
     hamburger.setAttribute('aria-expanded', isOpen);
+    document.body.classList.toggle('menu-open', isOpen);
   });
 
   mobileMenu.querySelectorAll('a').forEach(link => {
@@ -15,45 +16,40 @@ document.addEventListener('DOMContentLoaded', () => {
       mobileMenu.classList.remove('open');
       hamburger.classList.remove('open');
       hamburger.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-open');
     });
   });
 
   /* ---------- Navbar active-section detection ---------- */
-/* ---------- Navbar active-section detection ---------- */
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('main section');
 
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('main section');
+  const setActive = (id) => {
+    navLinks.forEach(link => {
+      link.classList.toggle(
+        'active',
+        link.dataset.section === id
+      );
+    });
+  };
 
-const setActive = (id) => {
-  navLinks.forEach(link => {
-    link.classList.toggle(
-      'active',
-      link.dataset.section === id
-    );
-  });
-};
+  const updateActiveSection = () => {
+    const scrollPosition = window.scrollY + 150;
+    let currentSection = 'home';
 
-const updateActiveSection = () => {
-  const scrollPosition = window.scrollY + 150;
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      if (scrollPosition >= sectionTop) {
+        currentSection = section.id;
+      }
+    });
 
-  let currentSection = 'home';
+    setActive(currentSection);
+  };
 
-  sections.forEach(section => {
-    const sectionTop = section.offsetTop;
+  window.addEventListener('scroll', updateActiveSection, { passive: true });
+  updateActiveSection();
 
-    if (scrollPosition >= sectionTop) {
-      currentSection = section.id;
-    }
-  });
-
-  setActive(currentSection);
-};
-
-window.addEventListener('scroll', updateActiveSection, {
-  passive: true
-});
-
-updateActiveSection();
   /* ---------- Scroll down button ---------- */
   const scrollDownBtn = document.getElementById('scrollDown');
   if (scrollDownBtn) {
@@ -64,16 +60,20 @@ updateActiveSection();
 
   /* ---------- Back to top ---------- */
   const backToTop = document.getElementById('backToTop');
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  if (backToTop) {
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   /* ---------- Resume download (placeholder link) ---------- */
   const resumeBtn = document.getElementById('resumeBtn');
-  resumeBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    alert('Add your resume file link here (e.g. resume.pdf) to enable downloads.');
-  });
+  if (resumeBtn) {
+    resumeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Add your resume file link here (e.g. resume.pdf) to enable downloads.');
+    });
+  }
 
   /* ---------- Skill bar fill on scroll ---------- */
   const skillFills = document.querySelectorAll('.skill-fill');
@@ -85,7 +85,7 @@ updateActiveSection();
         obs.unobserve(fill);
       }
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0.3 });
 
   skillFills.forEach(fill => skillObserver.observe(fill));
 
@@ -114,7 +114,7 @@ updateActiveSection();
         obs.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.3 });
 
   statNums.forEach(el => statObserver.observe(el));
 
@@ -122,7 +122,7 @@ updateActiveSection();
   const navbar = document.getElementById('navbar');
   const onScroll = () => {
     if (window.scrollY > 20) {
-      navbar.style.background = 'rgba(2, 9, 20, 0.85)';
+      navbar.style.background = 'rgba(2, 9, 20, 0.90)';
       navbar.style.borderBottomColor = 'rgba(96, 165, 250, 0.18)';
     } else {
       navbar.style.background = 'rgba(2, 9, 20, 0.65)';
